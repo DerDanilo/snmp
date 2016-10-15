@@ -19,14 +19,16 @@ myip=$(hostname -I)
 #####################
 
 function confirm () {
-# call with a prompt string or use a default
-read -r -p "${1:Are you sure? [y/N]}" response
-if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
-then
-    true
-else
-    false
-fi
+    # call with a prompt string or use a default
+    read -r -p "${1:-Are you sure? [y/N]} " response
+    case $response in
+        [yY][jJ][sS]|[yY]) 
+            true
+            ;;
+        *)
+            false
+            ;;
+    esac
 }
 
 function check_kernel_os {
