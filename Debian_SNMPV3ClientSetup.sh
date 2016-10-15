@@ -60,7 +60,7 @@ if [ "$osisucs" = "true" ]; then
 	/etc/init.d/univention-firewall restart
 	echo restarted UCS firewall
 	echo -e
-elif [ "$osisucs" = "true" ]; then
+elif [ "$osispve" = "true" ]; then
 	echo "Proxmox has it's own firewall! UFW setup skipped"
 elif [ "$osisplesk" = "true" ]; then
 	echo "Plesk has it's own firewall! UFW setup skipped"
@@ -290,7 +290,13 @@ echo NGINX detected: NGINX checks activated
 fi
 
 if [ "$osispve" = "true" ]; then
-	cp /opt/librenms-agent/agent-local/proxmox /usr/lib/check_mk_agent/local/
+	#cp /opt/librenms-agent/agent-local/proxmox /usr/lib/check_mk_agent/local/
+	wget https://github.com/librenms/librenms-agent/blob/master/agent-local/proxmox -O /usr/local/bin/proxmox
+	chmod +x /usr/local/proxmox
+	echo Extend snmp config with Proxmox script... 
+cat << "EOF" >> /etc/snmp/snmpd.conf
+extend proxmox /usr/local/bin/proxmox
+EOF
 	echo PROXMOX detected: PROXMOX checks activated
 fi
 
@@ -301,8 +307,27 @@ if ! grep -q \^flags.*\ hypervisor /proc/cpuinfo; then
 fi
 
 cp /opt/librenms-agent/agent-local/dpkg /usr/lib/check_mk_agent/local/
-echo DPKG check activated
+echo "DPKG check activated"
 }
+
+function osupdates-check {
+echo -e
+echo "Copy OS-Updates.sh script..."
+cp /opt/librenms-agent/snmp/os-updates.sh /etc/snmp/
+echo "Make the script executable"
+chmod +x /etc/snmp/os-updates.sh
+echo Extend snmp config with os update script... 
+cat << "EOF" >> /etc/snmp/snmpd.conf
+extend osupdate /etc/snmp/os-updates.sh
+EOF
+echo Create periodic update check for APT...
+cat << "EOF" > /etc/apt/apt.conf.d/10periodic
+APT::Periodic::Update-Package-Lists "1";
+EOF
+echo -e
+}
+
+
 
 function correct_agent_script_permission {
 echo -e
