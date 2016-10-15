@@ -1,6 +1,6 @@
 #/bin/bash
-# Version	1.0
-# Date		01.07.2016
+# Version	1.1
+# Date		15.10.2016
 # Author 	DerDanilo
 defaultsnmpuser=
 monitoringhost="None"
@@ -289,6 +289,23 @@ echo NGINX detected: NGINX checks activated
 /etc/init.d/nginx restart
 fi
 
+function osupdates-check {
+echo -e
+echo "Copy OS-Updates.sh script..."
+cp /opt/librenms-agent/snmp/os-updates.sh /etc/snmp/
+echo "Make the script executable"
+chmod +x /etc/snmp/os-updates.sh
+echo Extend snmp config with os update script... 
+cat << "EOF" >> /etc/snmp/snmpd.conf
+extend osupdate /etc/snmp/os-updates.sh
+EOF
+echo Create periodic update check for APT...
+cat << "EOF" > /etc/apt/apt.conf.d/10periodic
+APT::Periodic::Update-Package-Lists "1";
+EOF
+echo -e
+}
+
 if [ "$osispve" = "true" ]; then
 	#cp /opt/librenms-agent/agent-local/proxmox /usr/lib/check_mk_agent/local/
 	wget https://github.com/librenms/librenms-agent/blob/master/agent-local/proxmox -O /usr/local/bin/proxmox
@@ -309,25 +326,6 @@ fi
 cp /opt/librenms-agent/agent-local/dpkg /usr/lib/check_mk_agent/local/
 echo "DPKG check activated"
 }
-
-function osupdates-check {
-echo -e
-echo "Copy OS-Updates.sh script..."
-cp /opt/librenms-agent/snmp/os-updates.sh /etc/snmp/
-echo "Make the script executable"
-chmod +x /etc/snmp/os-updates.sh
-echo Extend snmp config with os update script... 
-cat << "EOF" >> /etc/snmp/snmpd.conf
-extend osupdate /etc/snmp/os-updates.sh
-EOF
-echo Create periodic update check for APT...
-cat << "EOF" > /etc/apt/apt.conf.d/10periodic
-APT::Periodic::Update-Package-Lists "1";
-EOF
-echo -e
-}
-
-
 
 function correct_agent_script_permission {
 echo -e
