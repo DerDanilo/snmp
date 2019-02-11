@@ -19,3 +19,9 @@ bash <(wget -qO- https://raw.githubusercontent.com/DerDanilo/snmp/master/Debian_
 #### SNMPv1 and v2 Disable Script
 
 bash <(wget -qO- https://raw.githubusercontent.com/DerDanilo/snmp/master/Debian_DisableSNMPV1aV2.sh)
+
+#### Disable verbose SNMP output
+
+bash <(wget -qO- https://raw.githubusercontent.com/DerDanilo/snmp/master/disable-verbose-output.sh)
+
+
