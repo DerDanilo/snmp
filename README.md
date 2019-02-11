@@ -13,15 +13,15 @@ Via CLI/SSH enter the following oneliner to execute either script:
 #### SNMPv3 Client Setup Script
 This one also disabled v1 and v2
 
-bash <(wget -qO- https://raw.githubusercontent.com/DerDanilo/snmp/master/Debian_SNMPV3ClientSetup.sh)
+`bash <(wget -qO- https://raw.githubusercontent.com/DerDanilo/snmp/master/Debian_SNMPV3ClientSetup.sh)`
 
 
 #### SNMPv1 and v2 Disable Script
 
-bash <(wget -qO- https://raw.githubusercontent.com/DerDanilo/snmp/master/Debian_DisableSNMPV1aV2.sh)
+`bash <(wget -qO- https://raw.githubusercontent.com/DerDanilo/snmp/master/Debian_DisableSNMPV1aV2.sh)`
 
 #### Disable verbose SNMP output
 
-bash <(wget -qO- https://raw.githubusercontent.com/DerDanilo/snmp/master/disable-verbose-output.sh)
+`bash <(wget -qO- https://raw.githubusercontent.com/DerDanilo/snmp/master/disable-verbose-output.sh)`
 
 
